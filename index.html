@@ -1,223 +1,96 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¿Cuánto me conoces? ❤️</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root { --rojo: #ff1744; --verde: #22c55e; --fondo: #080808; --tarjeta: rgba(22, 12, 15, 0.90); }
-        body { min-height: 100vh; font-family: "Segoe UI", Arial, sans-serif; color: white; display: flex; align-items: center; justify-content: center; padding: 20px; background: radial-gradient(circle at 15% 15%, rgba(255, 23, 68,.25), transparent 30%), radial-gradient(circle at 85% 85%, rgba(255, 23, 68,.18), transparent 30%), linear-gradient(135deg, #050505, #26050c, #080808); overflow-x: hidden; }
-       .heart { position: fixed; bottom: -80px; font-size: 30px; color: rgba(255, 60, 90,.12); pointer-events: none; animation: subir 10s linear infinite; z-index: 0; }
-       .heart:nth-child(1) { left: 10%; animation-delay: 0s; }.heart:nth-child(2) { left: 28%; animation-delay: 3s; }.heart:nth-child(3) { left: 50%; animation-delay: 6s; }.heart:nth-child(4) { left: 72%; animation-delay: 2s; }.heart:nth-child(5) { left: 90%; animation-delay: 5s; }
-        @keyframes subir { 0% { transform: translateY(0) rotate(0deg); opacity: 0; } 15% { opacity: 1; } 100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; } }
-       .container { width: 100%; max-width: 850px; position: relative; z-index: 2; }
-       .card { background: var(--tarjeta); border: 1px solid rgba(255, 255, 255,.12); border-radius: 30px; padding: 40px; box-shadow: 0 30px 90px rgba(0, 0, 0,.7), 0 0 60px rgba(255, 23, 68,.10); backdrop-filter: blur(20px); animation: aparecer.7s ease; }
-        @keyframes aparecer { from { opacity: 0; transform: translateY(30px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
-       .oculto { display: none!important; }
-       .inicio { text-align: center; }
-       .foto-contenedor { position: relative; width: 215px; height: 215px; margin: 0 auto 25px; }
-       .foto { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 5px solid var(--rojo); padding: 5px; box-shadow: 0 0 30px rgba(255, 23, 68,.55), 0 0 80px rgba(255, 23, 68,.18); }
-       .corazon-foto { position: absolute; right: -5px; bottom: 5px; width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; background: var(--rojo); border-radius: 50%; font-size: 25px; box-shadow: 0 8px 25px rgba(255, 23, 68,.5); animation: latido 1.2s infinite; }
-        @keyframes latido { 50% { transform: scale(1.15); } }
-       .etiqueta { display: inline-block; padding: 8px 17px; margin-bottom: 15px; border-radius: 50px; background: rgba(255, 255, 255,.07); border: 1px solid rgba(255, 255, 255,.08); color: #ff8ca2; font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; }
-        h1 { font-size: clamp(38px, 7vw, 62px); line-height: 1.05; margin-bottom: 18px; background: linear-gradient(90deg, #ffffff, #ff5575, #ffffff); -webkit-background-clip: text; color: transparent; }
-       .descripcion { max-width: 620px; margin: 0 auto 30px; color: #d0d0d0; font-size: 18px; line-height: 1.6; }
-       .btn { border: none; outline: none; padding: 16px 35px; border-radius: 50px; color: white; background: linear-gradient(135deg, #ff1744, #b00020); font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 12px 30px rgba(255, 23, 68,.3); transition:.3s; }
-       .btn:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 18px 45px rgba(255, 23, 68,.5); }
-       .barra-superior { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-       .numero { color: #ff6c87; font-weight: 700; }
-       .puntos { padding: 8px 16px; border-radius: 50px; background: rgba(255, 255, 255,.07); font-weight: 700; }
-       .barra { width: 100%; height: 8px; background: rgba(255, 255, 255,.08); border-radius: 50px; overflow: hidden; margin-bottom: 35px; }
-       .progreso { height: 100%; width: 0%; background: linear-gradient(90deg, #ff1744, #ff7892); border-radius: 50px; transition: width.5s ease; }
-       .pregunta { font-size: clamp(25px, 4vw, 36px); line-height: 1.3; margin-bottom: 28px; }
-       .opciones { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-       .opcion { width: 100%; padding: 19px; border-radius: 17px; border: 1px solid rgba(255, 255, 255,.12); background: rgba(255, 255, 255,.045); color: white; text-align: left; font-size: 16px; cursor: pointer; transition:.25s; }
-       .opcion:hover:not(:disabled) { background: rgba(255, 255, 255,.10); transform: translateY(-3px); border-color: rgba(255, 80, 110,.5); }
-       .opcion:disabled { cursor: default; }
-       .opcion.correcta { background: rgba(34, 197, 94,.20); border: 2px solid var(--verde); color: #7cffaa; animation: correcto.4s ease; }
-        @keyframes correcto { 50% { transform: scale(1.03); } }
-       .opcion.incorrecta { background: rgba(239, 51, 64,.20); border: 2px solid #ef3340; color: #ff7c85; animation: error.4s ease; }
-        @keyframes error { 25% { transform: translateX(-8px); } 50% { transform: translateX(8px); } 75% { transform: translateX(-4px); } }
-       .mensaje { min-height: 30px; margin-top: 22px; text-align: center; font-size: 18px; font-weight: 700; }
-       .siguiente { display: block; margin: 25px auto 0; }
-       .resultado { text-align: center; }
-       .corazones-final { font-size: 45px; animation: latido 1.2s infinite; }
-       .resultado h2 { font-size: clamp(35px, 6vw, 48px); margin: 20px 0 10px; }
-       .porcentaje { font-size: clamp(65px, 12vw, 90px); font-weight: 900; background: linear-gradient(90deg, #ff3158, #ffffff, #ff3158); -webkit-background-clip: text; color: transparent; margin: 10px 0; }
-       .puntuacion-final { color: #ddd; font-size: 20px; margin-bottom: 15px; }
-       .resultado-texto { max-width: 650px; margin: 0 auto 30px; color: #ccc; font-size: 18px; line-height: 1.7; }
-       .revision { text-align: left; margin: 25px auto 30px; max-width: 650px; }
-       .revision h3 { text-align: center; margin-bottom: 15px; color: #ff8ca2; }
-       .fallo { background: rgba(239,51,64,.12); border: 1px solid rgba(239,51,64,.4); border-radius: 15px; padding: 15px; margin-bottom: 12px; line-height: 1.6; }
-       .tu-respuesta { color: #ff7c85; }.correcta-respuesta { color: #7cffaa; }
-       .sin-fallos { text-align: center; color: #7cffaa; font-weight: 700; font-size: 18px; }
-        @media (max-width: 650px) { body { padding: 12px; }.card { padding: 25px 18px; border-radius: 24px; }.foto-contenedor { width: 155px; height: 155px; }.corazon-foto { width: 45px; height: 45px; font-size: 20px; }.descripcion { font-size: 16px; }.opciones { grid-template-columns: 1fr; }.opcion { padding: 17px; }.pregunta { font-size: 25px; } }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Ti ❤️</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { min-height:100vh; font-family:"Segoe UI", Arial, sans-serif; color:white; overflow:hidden; display:flex; align-items:center; justify-content:center; text-align:center; background: radial-gradient(ellipse at bottom, #1b0033 0%, #0d001a 40%, #000000 100%); }
+.estrella { position:absolute; background:white; border-radius:50%; animation:brillar 2s infinite alternate; }
+@keyframes brillar { from { opacity:.3; transform:scale(.8);} to { opacity:1; transform:scale(1.3);} }
+.flor { position:fixed; top:-50px; font-size:28px; animation:caer linear infinite; pointer-events:none; z-index:2; }
+@keyframes caer { to { transform: translateY(110vh) rotate(360deg); } }
+.contenedor { position:relative; z-index:3; max-width:700px; padding:30px; animation:aparecer 1.5s ease; }
+@keyframes aparecer { from { opacity:0; transform:translateY(30px);} to { opacity:1; transform:translateY(0);} }
+h1 { font-size:clamp(35px, 7vw, 60px); margin-bottom:20px; background:linear-gradient(90deg, #ff6ec7, #ffffff, #ff6ec7); -webkit-background-clip:text; color:transparent; }
+#mensaje { font-size:clamp(20px, 4vw, 28px); line-height:1.6; min-height:100px; color:#ffd6ec; margin-bottom:30px; }
+.corazon { font-size:70px; animation:latido 1.2s infinite; margin-bottom:20px; }
+@keyframes latido { 50% { transform:scale(1.2);} }
+.btn { border:none; padding:16px 35px; border-radius:50px; color:white; background:linear-gradient(135deg, #ff1744, #ff6ec7); font-size:17px; font-weight:700; cursor:pointer; box-shadow:0 10px 30px rgba(255,23,68,.5); transition:.3s; }
+.btn:hover { transform:scale(1.05); }
+#contador { margin-top:25px; font-size:18px; color:#ffb3d9; }
+</style>
 </head>
 <body>
-    <div class="heart">❤</div><div class="heart">❤</div><div class="heart">❤</div><div class="heart">❤</div><div class="heart">❤</div>
-    <div class="container">
-        <section class="card inicio" id="inicio">
-            <div class="foto-contenedor">
-                <img src="amor.jpeg" alt="Nuestra foto" class="foto">
-                <div class="corazon-foto">❤️</div>
-            </div>
-            <div class="etiqueta">Un reto solo para ti</div>
-            <h1>¿Cuánto me conoces?</h1>
-            <p class="descripcion">He preparado este pequeño reto para descubrir cuánto recuerdas de mí y de nuestra historia. ❤️</p>
-            <button class="btn" onclick="comenzar()">Comenzar el reto ❤️</button>
-        </section>
 
-        <section class="card oculto" id="quiz">
-            <div class="barra-superior">
-                <span class="numero" id="numero">Pregunta 1 de 30</span>
-                <span class="puntos">❤️ <span id="puntos">0</span></span>
-            </div>
-            <div class="barra"><div class="progreso" id="progreso"></div></div>
-            <h2 class="pregunta" id="pregunta"></h2>
-            <div class="opciones" id="opciones"></div>
-            <div class="mensaje" id="mensaje"></div>
-            <button class="btn siguiente oculto" id="siguiente" onclick="siguientePregunta()">Siguiente →</button>
-        </section>
+<div class="contenedor">
+    <div class="corazon">❤️</div>
+    <h1>Para ti, mi amor</h1>
+    <p id="mensaje"></p>
+    <button class="btn" onclick="siguienteMensaje()">Toca aquí ❤️</button>
+    <p id="contador"></p>
+</div>
 
-        <section class="card resultado oculto" id="resultado">
-            <div class="corazones-final">❤️ ❤️ ❤️</div>
-            <h2>¡Terminaste!</h2>
-            <p class="puntuacion-final">Tu resultado</p>
-            <div class="porcentaje" id="porcentaje">0%</div>
-            <p class="puntuacion-final" id="puntuacionFinal"></p>
-            <p class="resultado-texto" id="resultadoTexto"></p>
-            <div class="revision" id="revision"></div>
-            <button class="btn" onclick="reiniciar()">Volver a jugar 🔄</button>
-        </section>
-    </div>
+<script>
+// Crear galaxia
+for(let i=0; i<150; i++){
+    let estrella = document.createElement("div");
+    estrella.className = "estrella";
+    let tam = Math.random()*3+1;
+    estrella.style.width = tam+"px";
+    estrella.style.height = tam+"px";
+    estrella.style.left = Math.random()*100+"vw";
+    estrella.style.top = Math.random()*100+"vh";
+    estrella.style.animationDuration = (Math.random()*2+1)+"s";
+    document.body.appendChild(estrella);
+}
+// Crear flores cayendo
+const flores = ["🌸","🌺","🌷","💮","🌹"];
+for(let i=0; i<20; i++){
+    let flor = document.createElement("div");
+    flor.className = "flor";
+    flor.textContent = flores[Math.floor(Math.random()*flores.length)];
+    flor.style.left = Math.random()*100+"vw";
+    flor.style.animationDuration = (Math.random()*6+6)+"s";
+    flor.style.animationDelay = Math.random()*5+"s";
+    document.body.appendChild(flor);
+}
+// Mensajes de amor
+const mensajes = [
+    "Si las estrellas pudieran hablar, todas dirían tu nombre...",
+    "En toda esta galaxia inmensa, mi lugar favorito es a tu lado.",
+    "No necesito contar las estrellas, porque mi amor por ti es infinito.",
+    "Eres mi casualidad más bonita, mi historia favorita.",
+    "Te amo hoy, mañana y en todas las vidas que existan. ❤️"
+];
+let indice = 0;
+let contadorAmor = 0;
 
-    <script>
-        const preguntas = [
-            { pregunta: "¿Cuál es mi comida favorita?", opciones: ["Pizza","Ají de gallina","Hamburguesa","Pollo"], correcta: 1 },
-            { pregunta: "¿Cuál es mi color favorito?", opciones: ["Rojo","Azul","Verde","Negro"], correcta: 2 },
-            { pregunta: "¿Cuándo es mi cumpleaños?", opciones: ["13/05/2005","15/05/2005","13/06/2005","13/05/2006"], correcta: 0 },
-            { pregunta: "¿Cuál es uno de mis grandes sueños?", opciones: ["Ser famoso","Viajar por el mundo","Comprar un carro","Vivir solo"], correcta: 1 },
-            { pregunta: "¿Qué cosa odio que hagan conmigo?", opciones: ["Que me abracen","Que me llamen","Que me mientan","Que me escriban"], correcta: 2 },
-            { pregunta: "¿Quién habló primero en nuestra relación?", opciones: ["Tú","Yo","Los dos","Ninguno"], correcta: 1 },
-            { pregunta: "¿Quién se enamoró primero?", opciones: ["Tú","Yo","Los dos ❤️","Ninguno"], correcta: 2 },
-            { pregunta: "¿Dónde fue nuestro primer beso?", opciones: ["En la calle","En tu patio, en una esquina","En un parque","En mi casa"], correcta: 1 },
-            { pregunta: "¿Qué te regalé por San Valentín?", opciones: ["Un peluche","Una carta","Una rosa 🌹","Un collar"], correcta: 2 },
-            { pregunta: "¿Qué fue lo primero que me gustó de ti?", opciones: ["Tu cabello","Tu sonrisa 😊","Tus ojos","Tu voz"], correcta: 1 },
-            { pregunta: "¿Quién es más celoso?", opciones: ["Tú","Yo 😅","Los dos igual","Ninguno"], correcta: 1 },
-            { pregunta: "¿Quién suele pedir perdón primero?", opciones: ["Tú","Yo","Los dos","Ninguno"], correcta: 1 },
-            { pregunta: "¿Quién escribe primero cuando estamos molestos?", opciones: ["Tú","Yo","Los dos ❤️","Ninguno"], correcta: 2 },
-            { pregunta: "¿Quién es más cariñoso?", opciones: ["Tú ❤️","Yo","Los dos","Depende"], correcta: 0 },
-            { pregunta: "¿Quién se ríe más de las tonterías del otro?", opciones: ["Tú","Yo","Los dos 😂","Ninguno"], correcta: 2 },
-            { pregunta: "¿Cómo te digo de cariño?", opciones: ["Princesa","Sorita ❤️","Amor","Bebé"], correcta: 1 },
-            { pregunta: "¿Cuál es nuestra historia especial?", opciones: ["Romeo y Julieta","El sapo y la princesa 🐸👑","La Bella y la Bestia","Cenicienta"], correcta: 1 },
-            { pregunta: "¿Quién busca arreglar las cosas después de discutir?", opciones: ["Tú ❤️","Yo","Los dos","Nadie"], correcta: 0 },
-            { pregunta: "¿Quién ama más al otro?", opciones: ["Tú","Yo","Los dos ❤️","Es imposible saberlo"], correcta: 2 },
-            { pregunta: "¿Cuánto crees que conoces a tu novio?", opciones: ["Muy poco","Más o menos","Muchísimo ❤️","Todavía estoy aprendiendo"], correcta: 2 },
-            { pregunta: "¿Quién suele extrañar primero al otro?", opciones: ["Tú","Yo","Los dos","Depende del día"], correcta: 1 },
-            { pregunta: "¿Quién es más probable que prepare una sorpresa?", opciones: ["Tú","Yo","Los dos","Ninguno"], correcta: 1 },
-            { pregunta: "¿Quién se pone más nervioso cuando estamos juntos?", opciones: ["Tú","Yo","Los dos","Ninguno"], correcta: 1 },
-            { pregunta: "¿Quién recuerda más detalles de nuestra historia?", opciones: ["Tú","Yo","Los dos","Depende"], correcta: 2 },
-            { pregunta: "¿Qué es más importante para mí en una relación?", opciones: ["La confianza","Los regalos","Las apariencias","El dinero"], correcta: 0 },
-            { pregunta: "¿Qué prefiero recibir de ti?", opciones: ["Una mentira bonita","Una verdad sincera","Nada","Solo regalos"], correcta: 1 },
-            { pregunta: "¿Qué prefiero hacer contigo?", opciones: ["Pasar tiempo juntos","Estar separados","No hablar","Ignorarnos"], correcta: 0 },
-            { pregunta: "¿Qué quiero construir contigo?", opciones: ["Una historia bonita","Una rivalidad","Una competencia","Nada"], correcta: 0 },
-            { pregunta: "¿Qué representa mejor nuestra relación?", opciones: ["Una casualidad","Una aventura","Una historia que seguimos construyendo ❤️","Un juego"], correcta: 2 },
-            { pregunta: "Después de todo, ¿qué somos?", opciones: ["Dos desconocidos","Solo amigos","Una pareja ❤️","Compañeros"], correcta: 2 }
-        ];
+function escribirTexto(texto){
+    const elemento = document.getElementById("mensaje");
+    elemento.textContent = "";
+    let i = 0;
+    const intervalo = setInterval(() => {
+        elemento.textContent += texto[i];
+        i++;
+        if(i >= texto.length) clearInterval(intervalo);
+    }, 50);
+}
 
-        let actual = 0;
-        let puntos = 0;
-        let respondida = false;
-        let respuestasUsuario = [];
+function siguienteMensaje(){
+    escribirTexto(mensajes[indice]);
+    indice = (indice + 1) % mensajes.length;
+}
 
-        function comenzar() {
-            document.getElementById("inicio").classList.add("oculto");
-            document.getElementById("quiz").classList.remove("oculto");
-            mostrarPregunta();
-        }
+// Contador infinito de Te Amo
+setInterval(() => {
+    contadorAmor += 100;
+    document.getElementById("contador").textContent = "Te amo x" + contadorAmor.toLocaleString() + " y subiendo... ♾️";
+}, 100);
 
-        function mostrarPregunta() {
-            respondida = false;
-            const preguntaActual = preguntas[actual];
-            document.getElementById("numero").textContent = `Pregunta ${actual + 1} de ${preguntas.length}`;
-            document.getElementById("puntos").textContent = puntos;
-            document.getElementById("progreso").style.width = (actual / preguntas.length) * 100 + "%";
-            document.getElementById("pregunta").textContent = preguntaActual.pregunta;
-            document.getElementById("mensaje").textContent = "";
-            document.getElementById("siguiente").classList.add("oculto");
-            const contenedor = document.getElementById("opciones");
-            contenedor.innerHTML = "";
-            preguntaActual.opciones.forEach((opcion, indice) => {
-                const boton = document.createElement("button");
-                boton.className = "opcion";
-                boton.textContent = opcion;
-                boton.onclick = function () { comprobarRespuesta(indice, boton); };
-                contenedor.appendChild(boton);
-            });
-        }
-
-        function comprobarRespuesta(indice, boton) {
-            if (respondida) return;
-            respondida = true;
-            respuestasUsuario[actual] = indice;
-            const preguntaActual = preguntas[actual];
-            const botones = document.querySelectorAll(".opcion");
-            botones.forEach(b => { b.disabled = true; });
-
-            if (indice === preguntaActual.correcta) {
-                boton.classList.add("correcta");
-                puntos++;
-                document.getElementById("puntos").textContent = puntos;
-                document.getElementById("mensaje").innerHTML = "💚 ¡Correcto! ¡Me conoces muy bien! ❤️";
-            } else {
-                boton.classList.add("incorrecta");
-                botones[preguntaActual.correcta].classList.add("correcta");
-                document.getElementById("mensaje").innerHTML = "🔴 ¡Ups! Esa no era. ❤️‍🩹";
-            }
-            document.getElementById("siguiente").classList.remove("oculto");
-        }
-
-        function siguientePregunta() {
-            actual++;
-            if (actual >= preguntas.length) { terminar(); return; }
-            mostrarPregunta();
-        }
-
-        function terminar() {
-            document.getElementById("quiz").classList.add("oculto");
-            document.getElementById("resultado").classList.remove("oculto");
-            const porcentaje = Math.round((puntos / preguntas.length) * 100);
-            document.getElementById("porcentaje").textContent = porcentaje + "%";
-            document.getElementById("puntuacionFinal").textContent = `${puntos} de ${preguntas.length} respuestas correctas`;
-
-            let mensajeFinal;
-            if (porcentaje >= 90) { mensajeFinal = "😍 ¡Increíble! Me conoces demasiado bien. Se nota que recuerdas muchísimos detalles de mí y de nuestra historia. ❤️"; }
-            else if (porcentaje >= 75) { mensajeFinal = "🥰 ¡Muy bien! Se nota que me conoces bastante. Todavía nos quedan muchos recuerdos por crear juntos. ❤️"; }
-            else if (porcentaje >= 50) { mensajeFinal = "😏 Nada mal... pero tendremos que seguir creando recuerdos para que me conozcas todavía más. ❤️"; }
-            else { mensajeFinal = "😂 Creo que tenemos una tarea pendiente: ¡conocernos mucho más! Pero todavía nos queda una historia enorme por escribir. ❤️"; }
-            document.getElementById("resultadoTexto").textContent = mensajeFinal;
-
-            const revision = document.getElementById("revision");
-            let htmlRevision = "<h3>En esto fallaste ❤️‍🩹</h3>";
-            let tuvoFallos = false;
-            preguntas.forEach((p, i) => {
-                if (respuestasUsuario[i]!== p.correcta) {
-                    tuvoFallos = true;
-                    htmlRevision += `<div class="fallo"><strong>${i + 1}. ${p.pregunta}</strong><br><span class="tu-respuesta">❌ Tu respuesta: ${p.opciones[respuestasUsuario[i]]}</span><br><span class="correcta-respuesta">✅ Correcta: ${p.opciones[p.correcta]}</span></div>`;
-                }
-            });
-            if (!tuvoFallos) { htmlRevision += `<p class="sin-fallos">¡Perfecto! No fallaste ninguna 😍</p>`; }
-            revision.innerHTML = htmlRevision;
-        }
-
-        function reiniciar() {
-            actual = 0; puntos = 0; respuestasUsuario = [];
-            document.getElementById("resultado").classList.add("oculto");
-            document.getElementById("quiz").classList.remove("oculto");
-            mostrarPregunta();
-        }
-    </script>
+escribirTexto(mensajes[0]);
+indice = 1;
+</script>
 </body>
 </html>
