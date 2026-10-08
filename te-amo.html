@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Ti ❤️</title>
+<style>
+  body {
+    margin: 0;
+    background: black;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    color: white;
+    text-align: center;
+  }
+  canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
+  .centro {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+  }
+  h1 {
+    font-size: 45px;
+    color: #ff4d6d;
+    text-shadow: 0 0 20px #ff4d6d;
+    animation: latido 1.5s infinite;
+  }
+  p {
+    font-size: 22px;
+    line-height: 1.5;
+  }
+  @keyframes latido {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="estrellas"></canvas>
+
+<div class="centro">
+  <h1>❤️ TE AMO ❤️</h1>
+  <p>Entre todas las estrellas de la galaxia,<br>
+  tú eres mi favorita.<br><br>
+  Gracias por existir.</p>
+</div>
+
+<script>
+  const canvas = document.getElementById('estrellas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  let estrellas = [];
+  for (let i = 0; i < 200; i++) {
+    estrellas.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 2,
+      v: Math.random() * 0.5 + 0.2
+    });
+  }
+
+  function dibujar() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'white';
+    estrellas.forEach(e => {
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, e.r, 0, Math.PI * 2);
+      ctx.fill();
+      e.y += e.v;
+      if (e.y > canvas.height) e.y = 0;
+    });
+    requestAnimationFrame(dibujar);
+  }
+  dibujar();
+</script>
+
+</body>
+</html>
